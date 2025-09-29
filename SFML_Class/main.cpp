@@ -109,10 +109,10 @@ int main()
 		}
 
 		window.clear(Color::White);
-		map.draw_map(window, map.spriteSheet);
 		
 		player.update();
-		map.checkCollision(player.sprite, player.isJumping);
+		map.checkCollision(player.sprite);
+		map.draw(window);
 		player.draw(window);
 
 		window.display();

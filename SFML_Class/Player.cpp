@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Map.h"
 
 Player::Player() :texture(), sprite(texture), direction(0.0f, 0.0f), speed(0.1f), gravity(0.0f, 0.1f), isJumping(false)
 {

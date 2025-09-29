@@ -9,23 +9,19 @@ class Map
 {
 public:
 	
-	const static int MAP_WIDTH = 10;
-	const static int MAP_HEIGHT = 5;
+	Vector2i mapSize = { 10,5 };
 	const static int MAP_TILE_SIZE = 70;
-	char MAP[MAP_HEIGHT][MAP_WIDTH + 1] =
-	{
-		"          ",
-		"          ",
-		"         l",
-		"          ",
-		"gggggggggg"
-	};
-	map<char, Sprite> spriteSheet;
+	char** location;
+	Texture tx_tiles;
+
+	void freeMemoruForMap();
 
 	public:
 	Map();
+	Map(Vector2i, char**);
 	~Map();
-	void draw_map(RenderWindow& window, map<char, Sprite>& spriteSheet);
-	void checkCollision(Sprite& player, bool& isJumping);
+	void draw(RenderWindow&);
+	Vector2f getSeparationVector(FloatRect, FloatRect);
+	void checkCollision(Sprite& player);
 };
 

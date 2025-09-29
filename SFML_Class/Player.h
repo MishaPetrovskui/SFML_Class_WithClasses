@@ -1,8 +1,5 @@
 #include <SFML/Graphics.hpp>;
 #include <iostream>;
-#include <Math.h>;
-#include <map>
-#include "Map"
 using namespace sf;
 using namespace std;
 
@@ -22,4 +19,3 @@ public:
 	void update();
 	void draw(RenderWindow&);
 };
-
