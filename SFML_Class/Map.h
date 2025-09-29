@@ -2,7 +2,6 @@
 #include <iostream>;
 #include <cmath>;
 #include <map>;
-#include "Player.h";
 using namespace sf;
 using namespace std;
 class Map
