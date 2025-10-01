@@ -23,12 +23,13 @@ int main() {
     // Створення вікна
     RenderWindow window(VideoMode({ 1200, 800 }), "SFML");
 
-    Player player("p1_spritesheet.png");
+    Player player("skeletonBase.png");
+    player.setScale({ 2.f, 2.f });
     Map location(
         Vector2i({ MAP_WIDTH + 1 , MAP_HEIGHT }),
         Vector2i({ MAP_TILE_SIZE , MAP_TILE_SIZE }),
         (char*)MAP);
-
+    Clock clock;
     // Нескіченний цикл, який підтимує роботу вікна
     while (window.isOpen())
     {
@@ -39,11 +40,11 @@ int main() {
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
-
+        float time = clock.restart().asSeconds();
         window.clear(Color::Black);
         location.draw(window);
 
-        player.update();
+        player.update(time);
         location.checkCollisions(player.sprite);
         player.draw(window);
 

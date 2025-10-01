@@ -29,30 +29,44 @@ Player::~Player() {}
 
 void Player::updateAnimation(float timer)
 {
-	elapsedTimer += timer;
-	if (elapsedTimer >= frameDuration)
+	if (direction.length()) setCurentAnimation("walk");
+	else setCurentAnimation("idle");
+	elapsedTime += timer;
+	while (elapsedTime >= frameDuration)
 	{
-		elapsedTimer -= frameDuration;
-		currentFrame = (++currentFrame) % frames.size();
-		sprite.setTextureRect(frames[currentFrame]);
+		elapsedTime -= frameDuration;
+		currentFrame = (++currentFrame) % animations[curentAnimation].size();
+		sprite.setTextureRect(animations[curentAnimation][currentFrame]);
 	}
 }
 
 void Player::updateDirection()
 {
 	direction = { 0.f, 0.f };
-	if (Keyboard::isKeyPressed(Keyboard::Key::A)) { direction.x -= 1.f; updateAnimation(0.85); }
-	if (Keyboard::isKeyPressed(Keyboard::Key::D)) { direction.x += 1.f; updateAnimation(0.85); }
+	if (Keyboard::isKeyPressed(Keyboard::Key::A)) { direction.x -= 1.f; }
+	if (Keyboard::isKeyPressed(Keyboard::Key::D)) { direction.x += 1.f; }
 }
 
-void Player::update()
+void Player::update(float time)
 {
 	updateDirection();
-	//updateAnimation(0.85);
+	updateAnimation(time);
 	sprite.move(gravity + direction * speed);
 }
 
 void Player::draw(RenderWindow& window)
 {
 	window.draw(sprite);
+}
+
+Vector2f Player::getScale() { return sprite.getScale(); }
+void Player::setScale(Vector2f _scale) { sprite.setScale(_scale); }
+
+void Player::setCurentAnimation(const char _animName[])
+{
+	if (animations.count(_animName))
+	{
+		curentAnimation = std::string(_animName);
+		elapsedTime = frameDuration;
+	}
 }
