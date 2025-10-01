@@ -1,38 +1,58 @@
 #include "Player.h"
-#include <SFML/Graphics.hpp>;
+#include <iostream>
 
-Player::Player() :texture(), sprite(texture), direction(0.0f, 0.0f), speed(0.1f), gravity(0.0f, 0.1f), isJumping(false)
+using namespace std;
+
+Player::Player() :texture(), sprite(texture)
 {
-	texture.loadFromFile("p1_front.png");
-	sprite = Sprite(texture);
+	if (!texture.loadFromFile("p1_front.png"))
+		cout << "Texture not loaded!" << endl;
+	sprite.setTexture(texture);
+	sprite.setTextureRect(IntRect({ 0, 0 }, { 66, 92 }));
+}
+
+Player::Player(const char _texturePath[])
+	:texture(_texturePath), sprite(texture)
+{
+	sprite.setTexture(texture);
+	sprite.setTextureRect(IntRect({ 0*70, 2*96 }, { 66, 92 }));
+	/*
+	sprite.setScale({
+		100.f / (float)sprite.getTextureRect().size.x,
+		100.f / (float)sprite.getTextureRect().size.y
+		});
+	*/
+
 }
 
 Player::~Player() {}
 
-void Player::updateDirection() 
+void Player::updateAnimation(float timer)
 {
-	if (Keyboard::isKeyPressed(Keyboard::Key::Left) && sprite.getPosition().x > 0) direction.x -= 0.1f;
-	else if (Keyboard::isKeyPressed(Keyboard::Key::Right) && sprite.getPosition().x + 70 < 700) direction.x += 0.1f;
-	else direction.x = 0;
-	if (Keyboard::isKeyPressed(Keyboard::Key::Up) && !isJumping) 
+	elapsedTimer += timer;
+	if (elapsedTimer >= frameDuration)
 	{
-		direction.y -= 20.0f;
-		isJumping = true;
+		elapsedTimer -= frameDuration;
+		currentFrame = (++currentFrame) % frames.size();
+		sprite.setTextureRect(frames[currentFrame]);
 	}
-	/*else if (sprite.getPosition().y + 90 >= 500) 
-	{
-		direction.y = 0;
-		isJumping = false;
-		sprite.setPosition({ sprite.getPosition().x, 410 });
-	}*/
-	else direction.y += 0.1f;
 }
-void Player::update() 
+
+void Player::updateDirection()
+{
+	direction = { 0.f, 0.f };
+	if (Keyboard::isKeyPressed(Keyboard::Key::A)) { direction.x -= 1.f; updateAnimation(0.85); }
+	if (Keyboard::isKeyPressed(Keyboard::Key::D)) { direction.x += 1.f; updateAnimation(0.85); }
+}
+
+void Player::update()
 {
 	updateDirection();
+	//updateAnimation(0.85);
 	sprite.move(gravity + direction * speed);
 }
-void Player::draw(RenderWindow& window) 
+
+void Player::draw(RenderWindow& window)
 {
 	window.draw(sprite);
 }
